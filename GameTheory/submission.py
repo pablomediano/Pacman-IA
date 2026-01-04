@@ -296,9 +296,41 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
        legal moves.
      """
 
-     # BEGIN_YOUR_CODE (our solution is 20 lines of code, but don't worry if you deviate from this)
-     raise Exception("Not implemented yet")
-     # END_YOUR_CODE
+     def expectimax(agentIndex, depth, state):
+         if state.isWin() or state.isLose() or depth == self.depth:
+             return self.evaluationFunction(state)
+
+         numAgents = state.getNumAgents()
+
+         if agentIndex == 0:  # Pacman (maximiza)
+             value = float('-inf')
+             for action in state.getLegalActions(agentIndex):
+                 successor = state.generateSuccessor(agentIndex, action)
+                 value = max(value, expectimax(1, depth, successor))
+             return value
+         else:  # Fantasmas (esperanza matemática)
+             nextAgent = (agentIndex + 1) % numAgents
+             nextDepth = depth + 1 if nextAgent == 0 else depth
+
+             values = []
+             for action in state.getLegalActions(agentIndex):
+                 successor = state.generateSuccessor(agentIndex, action)
+                 values.append(expectimax(nextAgent, nextDepth, successor))
+             return sum(values) / len(values) if values else 0
+
+         # Elegimos la mejor acción para Pacman
+
+     bestScore = float('-inf')
+     bestAction = None
+
+     for action in gameState.getLegalActions(0):
+         successor = gameState.generateSuccessor(0, action)
+         score = expectimax(1, 0, successor)
+         if score > bestScore:
+             bestScore = score
+             bestAction = action
+
+     return bestAction
 
 ######################################################################################
 # Problem 4a (extra credit): creating a better evaluation function
