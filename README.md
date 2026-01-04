@@ -117,3 +117,30 @@ Ejemplo de ejecución del agente Expectimax:
 python pacman.py -p ExpectimaxAgent -l trappedClassic -a depth=3 -k 1
 
 ```
+## Escenarios disponibles
+
+Los siguientes escenarios están disponibles para probar los agentes:
+
+### Parte 1 – Algoritmos de Búsqueda
+- `smallMaze`
+- `mediumMaze`
+- `bigMaze`
+- `bigSafeSearch`
+- `originalClassic`
+- `powerClassic` 
+- `trickySearch`
+- `greedySearch`
+- `openMaze`
+- `openClassic`
+- `openSearch`
+
+### Parte 2 – Teoría de Juegos
+- `capsuleClassic`
+- `contestClassic`
+- `minimaxClassic`
+- `openClassic`
+- `originalClassic`
+- `smallClassic`
+- `testClassic`
+- `trappedClassic`
+- `trickyClassic`
