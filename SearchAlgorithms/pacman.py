@@ -254,7 +254,7 @@ class GameState:
         Creates an initial game state from a layout array (see layout.py).
         """
         self.data.initialize(layout, numGhostAgents)
-        print(f"OBJETIVO EN: {layout.goal}")
+        print(f"GOAL IN: {layout.goal}")
         
         self.goal = layout.goal
 

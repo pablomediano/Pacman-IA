@@ -245,10 +245,10 @@ class PositionSearchProblem(search.SearchProblem):
         self.walls = gameState.getWalls()
         self.startState = gameState.getPacmanPosition()
         if start != None: self.startState = start
-        print(f"OBJETIVO EN: {gameState.goal}")
+        print(f"GOAL IN: {gameState.goal}")
         self.goal = gameState.goal if gameState.goal is not None else (
-        1, 1)  # NUEVO: Usa el objetivo definido en el layout
-        print(f"OBJETIVO EN: {self.goal}")
+        1, 1)
+        print(f"GOAL IN: {self.goal}")
         self.costFn = costFn
         self.visualize = visualize
         print(gameState.getNumFood())
