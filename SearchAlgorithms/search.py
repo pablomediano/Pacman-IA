@@ -21,6 +21,24 @@ import util
 from game import Directions
 from typing import List
 
+def update_exploration_metrics(agent, state):
+    """
+    Updates exploration metrics:
+    - visited positions
+    - visit frequency per position
+    """
+    current_position = state.getPacmanPosition()
+
+    if current_position not in agent.visited_positions:
+        agent.unique_positions += 1
+        agent.visited_positions.add(current_position)
+
+    agent.visit_frequency[current_position] = (
+        agent.visit_frequency.get(current_position, 0) + 1
+    )
+
+
+
 class SearchProblem:
     """
     This class outlines the structure of a search problem, but doesn't implement
