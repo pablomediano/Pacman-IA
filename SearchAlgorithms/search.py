@@ -164,9 +164,64 @@ def nullHeuristic(state, problem=None) -> float:
     return 0
 
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic) -> List[Directions]:
-    """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    """
+    Performs an A* search.
+
+    The algorithm expands the node with the lowest combined cost:
+    f(n) = g(n) + h(n), where g(n) is the path cost and h(n) is the heuristic.
+    """
+
+    visited = {}                 # Dictionary to store visited states
+    solution = []                # List that will contain the final path
+    priority_queue = util.PriorityQueue()  # Priority queue ordered by f(n)
+    path = {}                    # Dictionary to reconstruct the path (child -> parent)
+    cost = {}                    # Dictionary to store the accumulated cost of each state
+
+    # Process the initial state
+    start_state = problem.getStartState()
+    priority_queue.push((start_state, '', 0), 0)
+    visited[start_state] = ''
+    cost[start_state] = 0
+
+    # If the start state is already the goal
+    if problem.isGoalState(start_state):
+        return solution
+
+    # Main A* loop
+    while not priority_queue.isEmpty():
+        current_state, action, current_cost = priority_queue.pop()
+        visited[current_state] = action
+
+        # Check if goal has been reached
+        if problem.isGoalState(current_state):
+            goal_state = current_state
+            break
+
+        # Expand successors
+        for successor in problem.getSuccessors(current_state):
+            next_state, next_action, step_cost = successor
+
+            if next_state not in visited:
+                # f(n) = g(n) + h(n)
+                priority = current_cost + step_cost + heuristic(next_state, problem)
+
+                # Only update if this path is better than a previous one
+                if next_state not in cost or cost[next_state] > priority:
+                    priority_queue.push(
+                        (next_state, next_action, current_cost + step_cost),
+                        priority
+                    )
+                    cost[next_state] = priority
+                    path[next_state] = current_state
+
+    # Reconstruct path from goal to start
+    while goal_state in path:
+        parent_state = path[goal_state]
+        solution.insert(0, visited[goal_state])
+        goal_state = parent_state
+
+    return solution
+
 
 
 def exploration(problem):
