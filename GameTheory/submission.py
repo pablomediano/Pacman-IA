@@ -175,9 +175,48 @@ class MinimaxAgent(MultiAgentSearchAgent):
 
         """
 
-        # BEGIN_YOUR_CODE (our solution is 22 lines of code, but don't worry if you deviate from this)
-        raise Exception("Not implemented yet")
-        # END_YOUR_CODE
+        def minimax(agentIndex, depth, state):
+            # Terminal condition: win, lose, or maximum depth reached
+            if state.isWin() or state.isLose() or depth == self.depth:
+                return self.evaluationFunction(state)
+
+            numAgents = state.getNumAgents()
+
+            # Pacman (maximizing agent)
+            if agentIndex == 0:
+                bestValue = float('-inf')
+                for action in state.getLegalActions(agentIndex):
+                    successor = state.generateSuccessor(agentIndex, action)
+                    value = minimax(1, depth, successor)
+                    bestValue = max(bestValue, value)
+                return bestValue
+
+            # Ghosts (minimizing agents)
+            else:
+                nextAgent = (agentIndex + 1) % numAgents
+                nextDepth = depth + 1 if nextAgent == 0 else depth
+
+                bestValue = float('inf')
+                for action in state.getLegalActions(agentIndex):
+                    successor = state.generateSuccessor(agentIndex, action)
+                    value = minimax(nextAgent, nextDepth, successor)
+                    bestValue = min(bestValue, value)
+                return bestValue
+
+        # Select the best action for Pacman (agent 0)
+        bestScore = float('-inf')
+        bestAction = None
+
+        for action in gameState.getLegalActions(0):
+            successor = gameState.generateSuccessor(0, action)
+            score = minimax(1, 0, successor)
+
+            if score > bestScore:
+                bestScore = score
+                bestAction = action
+
+        return bestAction
+
 
 ######################################################################################
 # Problem 2a: implementing alpha-beta
