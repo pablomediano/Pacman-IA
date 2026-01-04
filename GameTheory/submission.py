@@ -234,9 +234,50 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
           Returns the minimax action using self.depth and self.evaluationFunction
         """
 
-        # BEGIN_YOUR_CODE (our solution is 43 lines of code, but don't worry if you deviate from this)
-        raise Exception("Not implemented yet")
-        # END_YOUR_CODE
+        def alphabeta(agentIndex, depth, state, alpha, beta):
+            if state.isWin() or state.isLose() or depth == self.depth:
+                return self.evaluationFunction(state)
+
+            numAgents = state.getNumAgents()
+
+            if agentIndex == 0:  # Pacman (max)
+                value = float('-inf')
+                for action in state.getLegalActions(agentIndex):
+                    successor = state.generateSuccessor(agentIndex, action)
+                    value = max(value, alphabeta(1, depth, successor, alpha, beta))
+                    if value > beta:
+                        return value
+                    alpha = max(alpha, value)
+                return value
+            else:  # Ghosts (min)
+                nextAgent = (agentIndex + 1) % numAgents
+                nextDepth = depth + 1 if nextAgent == 0 else depth
+
+                value = float('inf')
+                for action in state.getLegalActions(agentIndex):
+                    successor = state.generateSuccessor(agentIndex, action)
+                    value = min(value, alphabeta(nextAgent, nextDepth, successor, alpha, beta))
+                    if value < alpha:
+                        return value
+                    beta = min(beta, value)
+                return value
+
+            # We choose the best action for the pacman
+
+        bestScore = float('-inf')
+        bestAction = None
+        alpha = float('-inf')
+        beta = float('inf')
+
+        for action in gameState.getLegalActions(0):
+            successor = gameState.generateSuccessor(0, action)
+            score = alphabeta(1, 0, successor, alpha, beta)
+            if score > bestScore:
+                bestScore = score
+                bestAction = action
+            alpha = max(alpha, bestScore)
+
+        return bestAction
 
 ######################################################################################
 # Problem 3b: implementing expectimax
