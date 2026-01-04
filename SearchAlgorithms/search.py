@@ -95,20 +95,56 @@ def tinyMazeSearch(problem: SearchProblem) -> List[Directions]:
 
 def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
     """
-    Search the deepest nodes in the search tree first.
+    Performs a Depth-First Search (DFS).
 
-    Your search algorithm needs to return a list of actions that reaches the
-    goal. Make sure to implement a graph search algorithm.
+    The algorithm explores the deepest nodes in the search tree first.
+    It returns a list of actions that leads from the initial state
+    to a goal state, implementing a graph search to avoid cycles.
 
-    To get started, you might want to try some of these simple commands to
-    understand the search problem that is being passed in:
-
+    For debugging purposes, the following calls may be useful:
     print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+    print("Is start a goal?:", problem.isGoalState(problem.getStartState()))
+    print("Start successors:", problem.getSuccessors(problem.getStartState()))
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    solution = []                 # List of actions that form the final solution
+    path = {}                     # Dictionary to reconstruct the path (child -> parent)
+    visited = {}                  # Dictionary of visited states
+    stack = util.Stack()          # Stack used for Depth-First Search
+
+    start_state = problem.getStartState()
+    stack.push((start_state, '', 0))   # (state, action, cost)
+    visited[start_state] = ''
+
+    # If the initial state is already the goal
+    if problem.isGoalState(start_state):
+        return solution
+
+    # Main DFS loop
+    while not stack.isEmpty():
+        current_state, action, cost = stack.pop()
+        visited[current_state] = action
+
+        # Check if goal has been reached
+        if problem.isGoalState(current_state):
+            goal_state = current_state
+            break
+
+        # Expand successors
+        for successor in problem.getSuccessors(current_state):
+            next_state, next_action, next_cost = successor
+
+            if next_state not in visited:
+                path[next_state] = current_state
+                stack.push(successor)
+
+    # Path reconstruction from goal to start
+    while goal_state in path:
+        parent_state = path[goal_state]
+        solution.insert(0, visited[goal_state])
+        goal_state = parent_state
+
+    return solution
 
 def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     """Search the shallowest nodes in the search tree first."""
